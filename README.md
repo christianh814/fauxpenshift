@@ -11,7 +11,7 @@ At a minimum
 
 > **NOTE:** This might work with Podman, but not if you're doing "rootless" mode (i.e. Just run this as root)
 
-While you don't need the `kind` CLI, you do need to satisfy all the prereqs for KIND. If you're having trouble see [HERE](https://kind.sigs.k8s.io/).
+While you don't need the `kind` CLI, you do need to satisfy all the prereqs for KIND. If you're having trouble see [their official docs](https://kind.sigs.k8s.io/).
 
 # Running it
 
