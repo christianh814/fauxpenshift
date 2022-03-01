@@ -1,7 +1,6 @@
 package kind
 
 import (
-	"os"
 	"time"
 
 	"sigs.k8s.io/kind/pkg/cluster"
@@ -25,7 +24,7 @@ nodes:
 
 var KindImageVersion string = "kindest/node:v1.23.3"
 
-// CreateKindCluster creates KIND cluster to use as the temp cluster manager
+// CreateKindCluster creates KIND cluster
 func CreateKindCluster(name string, cfg string) error {
 	//create a new KIND provider
 	provider := cluster.NewProvider()
@@ -33,23 +32,11 @@ func CreateKindCluster(name string, cfg string) error {
 	// https://github.com/kubernetes-sigs/kind/blob/v0.11.1/pkg/cmd/kind/get/clusters/clusters.go#L48
 	// provider.List()
 
-	// write the config file out until I find a better way of doing this
-	kindconfig := "/tmp/fxskc.yaml"
-	f, err := os.Create(kindconfig)
-	if err != nil {
-		return err
-	}
-	_, err = f.WriteString(KindConfig)
-	if err != nil {
-		return err
-	}
-	f.Close()
-
 	// Create a KIND instance and write out the kubeconfig in the specified location
-	err = provider.Create(
+	err := provider.Create(
 		name,
 		cluster.CreateWithKubeconfigPath(cfg),
-		cluster.CreateWithConfigFile(kindconfig),
+		cluster.CreateWithRawConfig([]byte(KindConfig)),
 		cluster.CreateWithDisplayUsage(false),
 		cluster.CreateWithDisplaySalutation(false),
 		cluster.CreateWithWaitForReady(30*time.Second),
@@ -60,22 +47,11 @@ func CreateKindCluster(name string, cfg string) error {
 		return err
 	}
 
-	// Remove the file
-	os.RemoveAll(kindconfig)
-
 	return nil
 }
 
 // DeleteKindCluster deletes KIND cluster based on the name given
 func DeleteKindCluster(name string, cfg string) error {
-	/* Testing quieting down deleting too*/
-	/*
-		klogger := kindcmd.NewLogger()
-		provider := cluster.NewProvider(
-			cluster.ProviderWithLogger(klogger),
-		)
-	*/
-
 	provider := cluster.NewProvider()
 
 	err := provider.Delete(name, cfg)

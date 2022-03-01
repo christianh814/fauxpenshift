@@ -1,12 +1,8 @@
 package utils
 
 import (
-	"io/ioutil"
-
 	"context"
 	"encoding/json"
-
-	log "github.com/sirupsen/logrus"
 
 	"k8s.io/apimachinery/pkg/api/meta"
 	metav1 "k8s.io/apimachinery/pkg/apis/meta/v1"
@@ -22,13 +18,10 @@ import (
 
 var decUnstructured = yaml.NewDecodingSerializer(unstructured.UnstructuredJSONScheme)
 
-// DoSSA  does service side apply with the given YAML
-func DoSSA(ctx context.Context, cfg *rest.Config, yaml string) error {
+// DoSSA  does service side apply with the given YAML as a []byte
+func DoSSA(ctx context.Context, cfg *rest.Config, yaml []byte) error {
 	// Read yaml into a slice of byte
-	yml, err := ioutil.ReadFile(yaml)
-	if err != nil {
-		log.Fatal(err)
-	}
+	yml := yaml
 
 	// get the RESTMapper for the GVR
 	dc, err := discovery.NewDiscoveryClientForConfig(cfg)
