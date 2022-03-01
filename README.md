@@ -9,8 +9,6 @@ At a minimum
 * Docker
 * Access to Nip.io
 
-> **NOTE:** This might work with Podman, but not if you're doing "rootless" mode (i.e. Just run this as root)
-
 While you don't need the `kind` CLI, you do need to satisfy all the prereqs for KIND. If you're having trouble see [their official docs](https://kind.sigs.k8s.io/).
 
 # Running it
@@ -39,7 +37,7 @@ Create a Kubernetes cluster with an OpenShift Router:
 fauxpenshift create
 ```
 
-> **NOTE** If you want to be brave and run `podman` then do: `KIND_EXPERIMENTAL_PROVIDER=podman fauxpenshift create`
+> **NOTE** You currently can't use podman
 
 You should have a Kubernetes Cluster with the router running
 
