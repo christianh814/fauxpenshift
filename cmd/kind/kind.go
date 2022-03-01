@@ -29,6 +29,9 @@ var KindImageVersion string = "kindest/node:v1.23.3"
 func CreateKindCluster(name string, cfg string) error {
 	//create a new KIND provider
 	provider := cluster.NewProvider()
+	// This lists clusters ~>
+	// https://github.com/kubernetes-sigs/kind/blob/v0.11.1/pkg/cmd/kind/get/clusters/clusters.go#L48
+	// provider.List()
 
 	// write the config file out until I find a better way of doing this
 	kindconfig := "/tmp/fxskc.yaml"
