@@ -6,7 +6,7 @@ This cli utility creates a Kubernetes cluster using [KIND](kind.sigs.k8s.io) (KI
 
 At a minimum
 
-* Docker
+* Docker or Podman (podman is experimental)
 * Access to Nip.io
 
 While you don't need the `kind` CLI, you do need to satisfy all the prereqs for KIND. If you're having trouble see [their official docs](https://kind.sigs.k8s.io/).
@@ -18,13 +18,13 @@ Download the CLI from and put it in your path.
 ## Linux
 
 ```shell
-sudo wget -O /usr/local/bin/fauxpenshift https://github.com/christianh814/fauxpenshift/releases/download/v0.0.1/fauxpenshift-amd64-linux
+sudo wget -O /usr/local/bin/fauxpenshift https://github.com/christianh814/fauxpenshift/releases/download/v0.0.2/fauxpenshift-amd64-linux
 ```
 
 ## Mac OS (Intel)
 
 ```shell
-sudo wget -O /usr/local/bin/fauxpenshift https://github.com/christianh814/fauxpenshift/releases/download/v0.0.1/fauxpenshift-amd64-darwin
+sudo wget -O /usr/local/bin/fauxpenshift https://github.com/christianh814/fauxpenshift/releases/download/v0.0.2/fauxpenshift-amd64-darwin
 ```
 
 Make it executable 
@@ -45,9 +45,11 @@ Create a Kubernetes cluster with an OpenShift Router:
 fauxpenshift create
 ```
 
-> **NOTE** You currently can't use podman
+> **NOTE** To use Podman run: `sudo  KIND_EXPERIMENTAL_PROVIDER=podman fauxpenshift create`
 
 You should have a Kubernetes Cluster with the router running
+
+> **NOTE** If using Podman, you must extract the kubeconfig config by runnning: `sudo fauxpenshift kubeconfig`
 
 ```shell
 oc get pods -n openshift-ingress 
@@ -107,3 +109,5 @@ Delete your cluster
 ```shell
 fauxpenshift destroy
 ```
+
+> **NOTE** If using Podman, run:  `sudo  KIND_EXPERIMENTAL_PROVIDER=podman fauxpenshift destroy`
