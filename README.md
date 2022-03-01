@@ -15,7 +15,25 @@ While you don't need the `kind` CLI, you do need to satisfy all the prereqs for 
 
 # Running it
 
-Download the CLI from HERE and put it in your path.
+Download the CLI from and put it in your path.
+
+```shell
+sudo wget -O /usr/local/bin/fauxpenshift https://github.com/christianh814/fauxpenshift/releases/download/v0.0.0/fauxpenshift-amd64-linux
+```
+
+Make it executable if you wish
+
+```shell
+sudo chmod +x /usr/local/bin/fauxpenshift
+```
+
+Bash completion is helpful
+
+```shell
+source <(fauxpenshift completion bash)
+```
+
+Create a Kubernetes cluster with an OpenShift Router:
 
 ```shell
 fauxpenshift create

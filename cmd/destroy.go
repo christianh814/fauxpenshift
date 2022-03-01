@@ -26,7 +26,7 @@ import (
 // destroyCmd represents the destroy command
 var destroyCmd = &cobra.Command{
 	Use:   "destroy",
-	Short: "destroys a cluster",
+	Short: "Destroys a cluster",
 	Long: `This will destroy a cluster. There is no way
 to "save" your cluster.
 
