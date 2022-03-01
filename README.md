@@ -21,13 +21,13 @@ Download the CLI from and put it in your path.
 sudo wget -O /usr/local/bin/fauxpenshift https://github.com/christianh814/fauxpenshift/releases/download/v0.0.0/fauxpenshift-amd64-linux
 ```
 
-Make it executable if you wish
+Make it executable 
 
 ```shell
 sudo chmod +x /usr/local/bin/fauxpenshift
 ```
 
-Bash completion is helpful
+Bash completion if you wish
 
 ```shell
 source <(fauxpenshift completion bash)
