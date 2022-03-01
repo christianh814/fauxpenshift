@@ -15,8 +15,16 @@ While you don't need the `kind` CLI, you do need to satisfy all the prereqs for 
 
 Download the CLI from and put it in your path.
 
+## Linux
+
 ```shell
-sudo wget -O /usr/local/bin/fauxpenshift https://github.com/christianh814/fauxpenshift/releases/download/v0.0.0/fauxpenshift-amd64-linux
+sudo wget -O /usr/local/bin/fauxpenshift https://github.com/christianh814/fauxpenshift/releases/download/v0.0.1/fauxpenshift-amd64-linux
+```
+
+## Mac OS (Intel)
+
+```shell
+sudo wget -O /usr/local/bin/fauxpenshift https://github.com/christianh814/fauxpenshift/releases/download/v0.0.1/fauxpenshift-amd64-darwin
 ```
 
 Make it executable 
