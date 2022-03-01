@@ -1,6 +1,6 @@
 # FauxpenShift
 
-This cli utility creates a Kubernetes cluster using [KIND](kind.sigs.k8s.io) and installs the [OpenShift Router](https://github.com/openshift/router) on top of it. This is useful for when you want to test your applications using OpenShift routes, but CRC is too heavy.
+This cli utility creates a Kubernetes cluster using [KIND](kind.sigs.k8s.io) (KIND runs Kubernetes in a containers) and installs the [OpenShift Router](https://github.com/openshift/router) on top of it. This is useful for when you want to test your applications using OpenShift routes, but CRC is too heavy.
 
 # Prerequisites
 
@@ -16,7 +16,6 @@ While you don't need the `kind` CLI, you do need to satisfy all the prereqs for 
 # Running it
 
 Download the CLI from HERE and put it in your path.
-
 
 ```shell
 fauxpenshift create
@@ -77,3 +76,10 @@ Curl it (or open it up in a browser)
 curl -sI http://$(oc get route welcome-php -n welcome-app -o jsonpath='{.status.ingress[0].host}')
 ```
 
+# Clean Up
+
+Delete your cluster
+
+```shell
+fauxpenshift destroy
+```
