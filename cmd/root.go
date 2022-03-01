@@ -27,8 +27,9 @@ var cfgFile string
 
 // rootCmd represents the base command when called without any subcommands
 var rootCmd = &cobra.Command{
-	Use:   "fauxpenshift",
-	Short: "Creates a Kubernetes Cluster with a Router",
+	Use:     "fauxpenshift",
+	Version: "v0.0.2",
+	Short:   "Creates a Kubernetes Cluster with a Router",
 	Long: `This utility creates a Kubernetes cluster with
 an OpenShift Router installed.
 

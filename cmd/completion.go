@@ -14,7 +14,7 @@ var completionCmd = &cobra.Command{
 
 Example:
 
-	source <(fauxpenshift completion bash)
+	source <(` + rootCmd.Name() + ` completion bash)
 `,
 	Run: func(cmd *cobra.Command, args []string) {
 		if len(args) == 0 {
