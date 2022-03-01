@@ -59,6 +59,7 @@ oc expose svc/welcome-php -n welcome-app
 
 Patch things that the `oc expose` didn't 100% get you.
 
+> **NOTE:** You only need to do this if you're doing this from scratch. If you have a "known good" YAML for your application it should "just work"
 ```shell
 kubectl patch route welcome-php -n welcome-app --type=json -p='[{"op": "add", "path": "/spec/to/kind", "value":"Service"}]'
 kubectl patch route welcome-php -n welcome-app --type=json -p='[{"op": "add", "path": "/spec/wildcardPolicy", "value":"Subdomain"}]'
