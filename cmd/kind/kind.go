@@ -3,7 +3,10 @@ package kind
 import (
 	"time"
 
+	"github.com/christianh814/fauxpenshift/cmd/utils"
 	"sigs.k8s.io/kind/pkg/cluster"
+
+	kindcmd "sigs.k8s.io/kind/pkg/cmd"
 )
 
 var KindConfig string = `kind: Cluster
@@ -27,7 +30,10 @@ var KindImageVersion string = "kindest/node:v1.23.3"
 // CreateKindCluster creates KIND cluster
 func CreateKindCluster(name string, cfg string) error {
 	//create a new KIND provider
-	provider := cluster.NewProvider()
+	klogger := kindcmd.NewLogger()
+	provider := cluster.NewProvider(
+		utils.GetDefaultRuntime(klogger),
+	)
 	// This lists clusters ~>
 	// https://github.com/kubernetes-sigs/kind/blob/v0.11.1/pkg/cmd/kind/get/clusters/clusters.go#L48
 	// provider.List()
@@ -52,7 +58,10 @@ func CreateKindCluster(name string, cfg string) error {
 
 // DeleteKindCluster deletes KIND cluster based on the name given
 func DeleteKindCluster(name string, cfg string) error {
-	provider := cluster.NewProvider()
+	klogger := kindcmd.NewLogger()
+	provider := cluster.NewProvider(
+		utils.GetDefaultRuntime(klogger),
+	)
 
 	err := provider.Delete(name, cfg)
 
@@ -67,6 +76,10 @@ func DeleteKindCluster(name string, cfg string) error {
 // GetKindKubeconfig returns the Kubeconfig of the named KIND cluster
 func GetKindKubeconfig(name string, internal bool) (string, error) {
 	// Create a provider and return the named kubeconfig file as a string
-	provider := cluster.NewProvider()
+	klogger := kindcmd.NewLogger()
+	provider := cluster.NewProvider(
+		utils.GetDefaultRuntime(klogger),
+	)
+
 	return provider.KubeConfig(name, internal)
 }

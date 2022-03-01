@@ -3,6 +3,7 @@ package utils
 import (
 	"context"
 	"encoding/json"
+	"os"
 
 	"k8s.io/apimachinery/pkg/api/meta"
 	metav1 "k8s.io/apimachinery/pkg/apis/meta/v1"
@@ -14,6 +15,9 @@ import (
 	"k8s.io/client-go/dynamic"
 	"k8s.io/client-go/rest"
 	"k8s.io/client-go/restmapper"
+
+	"sigs.k8s.io/kind/pkg/cluster"
+	"sigs.k8s.io/kind/pkg/log"
 )
 
 var decUnstructured = yaml.NewDecodingSerializer(unstructured.UnstructuredJSONScheme)
@@ -73,4 +77,21 @@ func DoSSA(ctx context.Context, cfg *rest.Config, yaml []byte) error {
 	})
 
 	return err
+}
+
+// GetDefault selected the default runtime from the environment override
+func GetDefaultRuntime(logger log.Logger) cluster.ProviderOption {
+	switch p := os.Getenv("KIND_EXPERIMENTAL_PROVIDER"); p {
+	case "":
+		return nil
+	case "podman":
+		logger.Warn("using podman due to KIND_EXPERIMENTAL_PROVIDER")
+		return cluster.ProviderWithPodman()
+	case "docker":
+		logger.Warn("using docker due to KIND_EXPERIMENTAL_PROVIDER")
+		return cluster.ProviderWithDocker()
+	default:
+		logger.Warnf("ignoring unknown value %q for KIND_EXPERIMENTAL_PROVIDER", p)
+		return nil
+	}
 }
