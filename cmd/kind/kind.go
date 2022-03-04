@@ -1,12 +1,11 @@
 package kind
 
 import (
+	"strings"
 	"time"
 
 	"github.com/christianh814/fauxpenshift/cmd/utils"
 	"sigs.k8s.io/kind/pkg/cluster"
-
-	kindcmd "sigs.k8s.io/kind/pkg/cmd"
 )
 
 var KindConfig string = `kind: Cluster
@@ -25,21 +24,18 @@ nodes:
     listenAddress: 0.0.0.0
 `
 
+// Set the default Kind Image version
 var KindImageVersion string = "kindest/node:v1.23.3"
+
+// We are using the same kind of provider for this whole package
+var Provider *cluster.Provider = cluster.NewProvider(
+	utils.GetDefaultRuntime(),
+)
 
 // CreateKindCluster creates KIND cluster
 func CreateKindCluster(name string, cfg string) error {
-	//create a new KIND provider
-	klogger := kindcmd.NewLogger()
-	provider := cluster.NewProvider(
-		utils.GetDefaultRuntime(klogger),
-	)
-	// This lists clusters ~>
-	// https://github.com/kubernetes-sigs/kind/blob/v0.11.1/pkg/cmd/kind/get/clusters/clusters.go#L48
-	// provider.List()
-
 	// Create a KIND instance and write out the kubeconfig in the specified location
-	err := provider.Create(
+	err := Provider.Create(
 		name,
 		cluster.CreateWithKubeconfigPath(cfg),
 		cluster.CreateWithRawConfig([]byte(KindConfig)),
@@ -58,12 +54,7 @@ func CreateKindCluster(name string, cfg string) error {
 
 // DeleteKindCluster deletes KIND cluster based on the name given
 func DeleteKindCluster(name string, cfg string) error {
-	klogger := kindcmd.NewLogger()
-	provider := cluster.NewProvider(
-		utils.GetDefaultRuntime(klogger),
-	)
-
-	err := provider.Delete(name, cfg)
+	err := Provider.Delete(name, cfg)
 
 	if err != nil {
 		return err
@@ -75,11 +66,29 @@ func DeleteKindCluster(name string, cfg string) error {
 
 // GetKindKubeconfig returns the Kubeconfig of the named KIND cluster
 func GetKindKubeconfig(name string, internal bool) (string, error) {
-	// Create a provider and return the named kubeconfig file as a string
-	klogger := kindcmd.NewLogger()
-	provider := cluster.NewProvider(
-		utils.GetDefaultRuntime(klogger),
-	)
+	return Provider.KubeConfig(name, internal)
+}
 
-	return provider.KubeConfig(name, internal)
+// GetKindClusters returns returns clusters matching a given name
+func GetKindClusters(match string) ([]string, error) {
+	// Create an empty []string and get all Kind clusters
+	l := []string{}
+	clusters, err := Provider.List()
+
+	// Return error if there is any
+	if err != nil {
+		return nil, err
+	}
+	// no clusters is actually valid
+	if len(clusters) == 0 {
+		return nil, nil
+	}
+
+	// Loop through each cluster and just filter out what isn't being looked for. Append what is found
+	for _, cluster := range clusters {
+		if strings.Contains(cluster, match) {
+			l = append(l, cluster)
+		}
+	}
+	return l, nil
 }
