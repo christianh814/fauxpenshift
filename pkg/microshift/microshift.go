@@ -12,7 +12,8 @@ import (
 
 //for now set these defaults
 var Runtime string = "podman"
-var MicroShiftImage = "quay.io/microshift/microshift-aio:latest"
+var MicroShiftImage string = "quay.io/microshift/microshift-aio:latest"
+var WaitTime time.Duration = 120 * time.Second
 
 func StartMicroshift(kubeconfigfile string) error {
 	// Set the variables for the OpenShift Router
@@ -42,7 +43,7 @@ func StartMicroshift(kubeconfigfile string) error {
 	}
 
 	// Wait until the deployment appears and is ready
-	if err = utils.WaitForDeployment(client, ns, depl, 90*time.Second); err != nil {
+	if err = utils.WaitForDeployment(client, ns, depl, WaitTime); err != nil {
 		return err
 	}
 
@@ -66,7 +67,7 @@ func StartMicroshift(kubeconfigfile string) error {
 	}
 
 	// Wait until the deployment is ready
-	if err = utils.WaitForDeployment(client, ns, depl, 90*time.Second); err != nil {
+	if err = utils.WaitForDeployment(client, ns, depl, WaitTime); err != nil {
 		return err
 	}
 
