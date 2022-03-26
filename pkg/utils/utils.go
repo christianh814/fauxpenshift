@@ -132,7 +132,7 @@ func IsDeploymentRunning(c kubernetes.Interface, ns string, depl string) wait.Co
 
 // Poll up to timeout seconds for pod to enter running state.
 func WaitForDeployment(c kubernetes.Interface, namespace string, deployment string, timeout time.Duration) error {
-	return wait.PollImmediate(time.Second, timeout, IsDeploymentRunning(c, namespace, deployment))
+	return wait.PollImmediate(5*time.Second, timeout, IsDeploymentRunning(c, namespace, deployment))
 }
 
 // NewClient returns a kubernetes.Interface
