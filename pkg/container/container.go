@@ -69,7 +69,7 @@ func CopyKubeConfig(runtime string, instance string, dest string) error {
 		return err
 	}
 
-	// Let's try and fix ownershit
+	// Let's try and fix ownership
 	if err := exec.Command(
 		"chown",
 		os.Getenv("SUDO_USER")+":"+os.Getenv("SUDO_USER"),
