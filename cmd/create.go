@@ -42,7 +42,7 @@ PRs are welcome!`,
 		// For now, let's just use the default K8S config path. Later this can be an option
 		homedir := os.Getenv("SUDO_USER")
 		// Crude to assime "/home" is the homedir but leaving it for now
-		kcfg := "/home" + homedir + "/.kube/config"
+		kcfg := "/home/" + homedir + "/.kube/config"
 
 		// Create the Microshift Cluster
 		log.Info("Creating Microshift instance")
