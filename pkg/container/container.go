@@ -29,7 +29,7 @@ func RunMicroShiftContainer(runtime string, container string) error {
 		"fauxpenshift=instance",
 		container,
 	).Start(); err != nil {
-		return err
+		return err.(*exec.ExitError)
 	}
 
 	// if we're here we should be okay
