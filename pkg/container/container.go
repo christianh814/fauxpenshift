@@ -18,8 +18,8 @@ func RunMicroShiftContainer(runtime string, container string) error {
 		"run",
 		"-d",
 		"--rm",
-		//"--name",
-		//"fauxpenshift",
+		"--name",
+		"fauxpenshift",
 		"--privileged",
 		"-v",
 		"microshift-data:/var/lib",
@@ -28,7 +28,7 @@ func RunMicroShiftContainer(runtime string, container string) error {
 		"--label",
 		"fauxpenshift=instance",
 		container,
-	).Run(); err != nil {
+	).Start(); err != nil {
 		return err
 	}
 
