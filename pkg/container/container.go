@@ -1,7 +1,6 @@
 package container
 
 import (
-	"fmt"
 	"os"
 	"os/exec"
 )
@@ -24,8 +23,12 @@ func RunMicroShiftContainer(runtime string, container string) error {
 		"--privileged",
 		"-v",
 		"microshift-data:/var/lib",
-		"--net",
-		"host",
+		"-p",
+		"6443:6443",
+		"-p",
+		"80:80",
+		"-p",
+		"443:443",
 		"--label",
 		"fauxpenshift=instance",
 		container,
@@ -34,8 +37,6 @@ func RunMicroShiftContainer(runtime string, container string) error {
 		if err.(*exec.ExitError).ExitCode() != 125 {
 			return err
 		}
-		fmt.Println(err)
-		fmt.Println(err.(*exec.ExitError).ExitCode())
 	}
 
 	// if we're here we should be okay
