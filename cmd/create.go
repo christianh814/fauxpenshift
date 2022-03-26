@@ -18,8 +18,7 @@ package cmd
 import (
 	"os"
 
-	"github.com/christianh814/fauxpenshift/cmd/kind"
-	"github.com/christianh814/fauxpenshift/cmd/router"
+	"github.com/christianh814/fauxpenshift/pkg/microshift"
 	log "github.com/sirupsen/logrus"
 
 	"github.com/spf13/cobra"
@@ -29,8 +28,7 @@ import (
 var createCmd = &cobra.Command{
 	Use:   "create",
 	Short: "Creates a cluster",
-	Long: `Create a local Kubernetes cluster and installs the
-OpenShift router on this cluster.
+	Long: `Create a local Kubernetes cluster based on MicroShift.
 
 Since the router binds to 80/443, you must run this as root.
 Rootless won't work because of the aforementioned binding.
@@ -38,26 +36,23 @@ PRs are welcome!`,
 	Run: func(cmd *cobra.Command, args []string) {
 		// This program should be run as root as "rootless" containers probably won't work
 		if os.Getuid() != 0 {
-			log.Warn("Running as non-root can produce some problems. YMMV.")
+			log.Fatal("Currently unsupported to run rootless.")
 		}
 
 		// For now, let's just use the default K8S config path. Later this can be an option
-		homedir, _ := os.UserHomeDir()
-		kcfg := homedir + "/.kube/config"
+		homedir := os.Getenv("SUDO_USER")
+		// Crude to assime "/home" is the homedir but leaving it for now
+		kcfg := "/home" + homedir + "/.kube/config"
 
-		// Create the Kubernetes Cluster
-		log.Info("Creating Kubernetes Cluster")
-		err := kind.CreateKindCluster("fauxpenshift", kcfg)
+		// Create the Microshift Cluster
+		log.Info("Creating Microshift instance")
+		err := microshift.StartMicroshift(kcfg)
 		if err != nil {
 			log.Fatal(err)
 		}
 
-		// Install router
-		log.Info("Installing OpenShift Router")
-		err = router.InstallRouter(kcfg)
-		if err != nil {
-			log.Fatal(err)
-		}
+		// We should be good to go
+		log.Info("Finished installing Microshift!")
 
 	},
 }

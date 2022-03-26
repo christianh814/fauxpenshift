@@ -4,7 +4,7 @@ import (
 	"strings"
 	"time"
 
-	"github.com/christianh814/fauxpenshift/cmd/utils"
+	"github.com/christianh814/fauxpenshift/pkg/utils"
 	"sigs.k8s.io/kind/pkg/cluster"
 )
 

@@ -19,7 +19,7 @@ import (
 	"fmt"
 	"log"
 
-	"github.com/christianh814/fauxpenshift/cmd/kind"
+	"github.com/christianh814/fauxpenshift/pkg/kind"
 	"github.com/spf13/cobra"
 )
 

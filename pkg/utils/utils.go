@@ -4,17 +4,23 @@ import (
 	"context"
 	"encoding/json"
 	"os"
+	"time"
 
+	apierrors "k8s.io/apimachinery/pkg/api/errors"
 	"k8s.io/apimachinery/pkg/api/meta"
 	metav1 "k8s.io/apimachinery/pkg/apis/meta/v1"
+	v1 "k8s.io/apimachinery/pkg/apis/meta/v1"
 	"k8s.io/apimachinery/pkg/apis/meta/v1/unstructured"
 	"k8s.io/apimachinery/pkg/runtime/serializer/yaml"
 	"k8s.io/apimachinery/pkg/types"
+	"k8s.io/apimachinery/pkg/util/wait"
 	"k8s.io/client-go/discovery"
 	"k8s.io/client-go/discovery/cached/memory"
 	"k8s.io/client-go/dynamic"
+	"k8s.io/client-go/kubernetes"
 	"k8s.io/client-go/rest"
 	"k8s.io/client-go/restmapper"
+	"k8s.io/client-go/tools/clientcmd"
 
 	log "github.com/sirupsen/logrus"
 	"sigs.k8s.io/kind/pkg/cluster"
@@ -94,4 +100,52 @@ func GetDefaultRuntime() cluster.ProviderOption {
 		log.Warnf("ignoring unknown value %q for KIND_EXPERIMENTAL_PROVIDER", p)
 		return nil
 	}
+}
+
+//check to see if the named deployment is running
+func IsDeploymentRunning(c kubernetes.Interface, ns string, depl string) wait.ConditionFunc {
+
+	return func() (bool, error) {
+
+		// Get the named deployment
+		dep, err := c.AppsV1().Deployments(ns).Get(context.TODO(), depl, v1.GetOptions{})
+
+		// If the deployment is not found, that's okay. It means it's not up and running yet
+		if apierrors.IsNotFound(err) {
+			return false, nil
+		}
+
+		// if another error was found, return that
+		if err != nil {
+			return false, err
+		}
+
+		// If the deployment hasn't finsihed, then let's run again
+		if dep.Status.ReadyReplicas == 0 {
+			return false, nil
+		}
+
+		return true, nil
+
+	}
+}
+
+// Poll up to timeout seconds for pod to enter running state.
+func WaitForDeployment(c kubernetes.Interface, namespace string, deployment string, timeout time.Duration) error {
+	return wait.PollImmediate(time.Second, timeout, IsDeploymentRunning(c, namespace, deployment))
+}
+
+// NewClient returns a kubernetes.Interface
+func NewClient(kubeConfigPath string) (kubernetes.Interface, error) {
+	if kubeConfigPath == "" {
+		kubeConfigPath = os.Getenv("KUBECONFIG")
+	}
+	if kubeConfigPath == "" {
+		kubeConfigPath = clientcmd.RecommendedHomeFile // use default path(.kube/config)
+	}
+	kubeConfig, err := clientcmd.BuildConfigFromFlags("", kubeConfigPath)
+	if err != nil {
+		return nil, err
+	}
+	return kubernetes.NewForConfig(kubeConfig)
 }
