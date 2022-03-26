@@ -1,6 +1,7 @@
 package container
 
 import (
+	"fmt"
 	"os"
 	"os/exec"
 )
@@ -31,8 +32,10 @@ func RunMicroShiftContainer(runtime string, container string) error {
 	).Run(); err != nil {
 		// TODO: Need to figure out why trying to run a container returns a 125 even though it's running
 		if err.(*exec.ExitError).ExitCode() != 125 {
-			return err.(*exec.ExitError)
+			return err
 		}
+		fmt.Println(err)
+		fmt.Println(err.(*exec.ExitError).ExitCode())
 	}
 
 	// if we're here we should be okay
