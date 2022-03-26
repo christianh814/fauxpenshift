@@ -56,6 +56,7 @@ func CopyKubeConfig(runtime string, instance string, dest string) error {
 	).Run(); err != nil {
 		//return err
 		// TODO: figure out why executing contianers always returns 125
+		log.Warn(err.(*exec.ExitError).Error())
 		return nil
 	}
 
