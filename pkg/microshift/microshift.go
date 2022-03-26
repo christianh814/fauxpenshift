@@ -7,6 +7,7 @@ import (
 	"github.com/christianh814/fauxpenshift/pkg/container"
 	"github.com/christianh814/fauxpenshift/pkg/router"
 	"github.com/christianh814/fauxpenshift/pkg/utils"
+	log "github.com/sirupsen/logrus"
 	corev1 "k8s.io/api/core/v1"
 )
 
@@ -25,6 +26,7 @@ func StartMicroshift(kubeconfigfile string) error {
 	}
 
 	// try and run the microshift container, return if there's an error
+	log.Info("Running Microshift")
 	if err := container.RunMicroShiftContainer(Runtime, MicroShiftImage); err != nil {
 		return err
 	}
@@ -32,6 +34,7 @@ func StartMicroshift(kubeconfigfile string) error {
 	// Copy the Kubeconfig file because we'll need it
 	// TODO: It takes a while for µShift to come up. Need a better method of waiting
 	time.Sleep(10 * time.Second)
+	log.Info("Copy Kubeconfig File")
 	if err := container.CopyKubeConfig(Runtime, "fauxpenshift", kubeconfigfile); err != nil {
 		return err
 	}
@@ -43,6 +46,7 @@ func StartMicroshift(kubeconfigfile string) error {
 	}
 
 	// Wait until the deployment appears and is ready
+	log.Info("Waiting for Deployment to appear")
 	if err = utils.WaitForDeployment(client, ns, depl, WaitTime); err != nil {
 		return err
 	}
@@ -62,11 +66,13 @@ func StartMicroshift(kubeconfigfile string) error {
 			Value: "true",
 		},
 	}
+	log.Info("Patching Router")
 	if err := router.PatchRouter(ev, client, ns, depl); err != nil {
 		return err
 	}
 
 	// Wait until the deployment is ready
+	log.Info("Waiting for updated Deployment to rollout")
 	if err = utils.WaitForDeployment(client, ns, depl, WaitTime); err != nil {
 		return err
 	}
