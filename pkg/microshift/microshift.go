@@ -22,6 +22,7 @@ func StartMicroshift(kubeconfigfile string) error {
 	depl := "router-default"
 	// First check to see if someone provided a different runtime
 	if os.Getenv("FAUXPENSHIFT_SET_RUNTIME") == "docker" {
+		log.Info("Using Docker runtime")
 		Runtime = "docker"
 	}
 

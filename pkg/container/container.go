@@ -3,6 +3,8 @@ package container
 import (
 	"os"
 	"os/exec"
+
+	log "github.com/sirupsen/logrus"
 )
 
 // RunMicroShiftContainer starts microshift it needs a runtime and a container to run
@@ -35,6 +37,7 @@ func RunMicroShiftContainer(runtime string, container string) error {
 	).Run(); err != nil {
 		// TODO: Need to figure out why running a container with go returns 125
 		//return err
+		log.Warn(err.(*exec.ExitError).Error())
 		return nil
 	}
 
@@ -68,7 +71,7 @@ func CopyKubeConfig(runtime string, instance string, dest string) error {
 	// Let's try and fix ownershit
 	if err := exec.Command(
 		"chown",
-		os.Getenv("SUDO_USER")+"."+os.Getenv("SUDO_USER"),
+		os.Getenv("SUDO_USER")+":"+os.Getenv("SUDO_USER"),
 		dest,
 	).Run(); err != nil {
 		return err
