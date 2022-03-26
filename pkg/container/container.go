@@ -28,8 +28,11 @@ func RunMicroShiftContainer(runtime string, container string) error {
 		"--label",
 		"fauxpenshift=instance",
 		container,
-	).Start(); err != nil {
-		return err.(*exec.ExitError)
+	).Run(); err != nil {
+		// TODO: Need to figure out why trying to run a container returns a 125 even though it's running
+		if err.(*exec.ExitError).ExitCode() != 125 {
+			return err.(*exec.ExitError)
+		}
 	}
 
 	// if we're here we should be okay
