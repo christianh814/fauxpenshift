@@ -110,9 +110,51 @@ func DisplayMicroshiftInstance(runtime string, label string) ([]byte, error) {
 
 	// check of errors
 	if err != nil {
-		return nil, err
+		if err.(*exec.ExitError).ExitCode() != 125 {
+			return nil, err
+		}
 	}
 
 	// return the output
 	return cmdOutPut, nil
+}
+
+//DisplayMicroshiftKubeconfig shows the kubeconfig file based specified instance name
+func DisplayMicroshiftKubeconfig(runtime string, instance string) ([]byte, error) {
+	// Get the container based on the name given
+	cmdOutPut, err := exec.Command(
+		runtime,
+		"exec",
+		"-it",
+		instance,
+		"cat",
+		"/var/lib/microshift/resources/kubeadmin/kubeconfig",
+	).Output()
+
+	// check of errors
+	if err != nil {
+		if err.(*exec.ExitError).ExitCode() != 125 {
+			return nil, err
+		}
+	}
+
+	// return the output
+	return cmdOutPut, nil
+}
+
+//StopMicroshiftKubeconfig shows the kubeconfig file based specified instance name
+func StopMicroshiftKubeconfig(runtime string, instance string) error {
+	// Stop container based on the given name
+	if err := exec.Command(
+		runtime,
+		"stop",
+		instance,
+	).Start(); err != nil {
+		if err.(*exec.ExitError).ExitCode() != 125 {
+			return nil
+		}
+	}
+
+	// if we're here it's probably okay...right?
+	return nil
 }
