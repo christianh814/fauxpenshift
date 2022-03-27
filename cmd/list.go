@@ -17,9 +17,11 @@ package cmd
 
 import (
 	"fmt"
-	"log"
+	"os"
 
-	"github.com/christianh814/fauxpenshift/pkg/kind"
+	"github.com/christianh814/fauxpenshift/pkg/container"
+	"github.com/christianh814/fauxpenshift/pkg/microshift"
+	log "github.com/sirupsen/logrus"
 	"github.com/spf13/cobra"
 )
 
@@ -30,17 +32,23 @@ var listCmd = &cobra.Command{
 	Short:   "Lists all your instances",
 	Long:    `Shows you a simple list of your clusters`,
 	Run: func(cmd *cobra.Command, args []string) {
-		// List clusters that match, check for errors
-		clusters, err := kind.GetKindClusters("fauxpenshift")
+		// Set runtime
+		// TODO: Want to probably set this centrally somehow
+		var rt string = microshift.Runtime
+		if os.Getenv("FAUXPENSHIFT_SET_RUNTIME") == "docker" {
+			rt = "docker"
+		}
+
+		// Display current clusters
+		output, err := container.DisplayMicroshiftInstance(rt, "label=fauxpenshift=instance")
+
+		// check for errors
 		if err != nil {
 			log.Fatal(err)
 		}
 
-		// loop trough them and print them
-		for _, c := range clusters {
-			fmt.Println(c)
-		}
-
+		// If we're here, we can display the output
+		fmt.Println(string(output))
 	},
 }
 

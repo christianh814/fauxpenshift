@@ -34,8 +34,8 @@ func StartMicroshift(kubeconfigfile string) error {
 
 	// Copy the Kubeconfig file because we'll need it
 	// TODO: It takes a while for µShift to come up. Need a better method of waiting
+	log.Info("Setting up Kubeconfig File")
 	time.Sleep(10 * time.Second)
-	log.Info("Copy Kubeconfig File")
 	if err := container.CopyKubeConfig(Runtime, "fauxpenshift", kubeconfigfile); err != nil {
 		return err
 	}

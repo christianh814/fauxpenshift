@@ -1,7 +1,9 @@
 package container
 
 import (
+	"fmt"
 	"os/exec"
+	"strings"
 
 	"github.com/christianh814/fauxpenshift/pkg/utils"
 	//log "github.com/sirupsen/logrus"
@@ -75,10 +77,16 @@ func CopyKubeConfig(runtime string, instance string, dest string) error {
 		return err
 	}
 
+	// TODO: For Mac, the user doesn't get it's own group so I have to guess based on the destination
+	var owner string = utils.User + ":" + utils.User
+	if strings.Contains(dest, "Users") {
+		owner = utils.User
+	}
+
 	// Let's try and fix ownership
 	if err := exec.Command(
 		"chown",
-		utils.User+":"+utils.User,
+		owner,
 		dest,
 	).Run(); err != nil {
 		return err
@@ -86,4 +94,25 @@ func CopyKubeConfig(runtime string, instance string, dest string) error {
 
 	// if we're here we should be okay
 	return nil
+}
+
+//DisplayMicroshiftInstance lists containers based on the specified label
+func DisplayMicroshiftInstance(runtime string, label string) ([]byte, error) {
+	// Get the container based on the label given
+	cmdOutPut, err := exec.Command(
+		runtime,
+		"ps",
+		"--filter",
+		label,
+		"--format",
+		fmt.Sprintf(`table {{.Names}}\t{{.Image}}\t{{.Status}}`),
+	).Output()
+
+	// check of errors
+	if err != nil {
+		return nil, err
+	}
+
+	// return the output
+	return cmdOutPut, nil
 }
