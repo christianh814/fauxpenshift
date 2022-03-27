@@ -14,7 +14,7 @@ import (
 //for now set these defaults
 var Runtime string = "podman"
 var MicroShiftImage string = "quay.io/microshift/microshift-aio:latest"
-var WaitTime time.Duration = 300 * time.Second
+var WaitTime time.Duration = 600 * time.Second
 
 func StartMicroshift(kubeconfigfile string) error {
 	// Set the variables for the OpenShift Router
