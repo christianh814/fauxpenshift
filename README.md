@@ -43,11 +43,13 @@ source <(fauxpenshift completion bash)
 
 Create a Kubernetes cluster with an OpenShift Router:
 
+> **NOTE** SUDO is required, sorry
+
 ```shell
-fauxpenshift create
+sudo fauxpenshift create
 ```
 
-> **NOTE** To use Docekr run: `sudo  FAUXPENSHIFT_SET_RUNTIME=docker fauxpenshift create`
+> **NOTE** To use Docekr run: `sudo FAUXPENSHIFT_SET_RUNTIME=docker fauxpenshift create`
 
 You should have a Kubernetes Cluster with the router running
 
@@ -99,7 +101,7 @@ curl -sI http://$(oc get route welcome-php -n welcome-app -o jsonpath='{.status.
 Delete your cluster
 
 ```shell
-fauxpenshift destroy
+sudo fauxpenshift destroy
 ```
 
 > **NOTE** If using Docekr, run:  `sudo FAUXPENSHIFT_SET_RUNTIME=docker fauxpenshift destroy`
