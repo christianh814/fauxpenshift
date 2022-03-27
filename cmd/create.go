@@ -20,6 +20,7 @@ import (
 	"runtime"
 
 	"github.com/christianh814/fauxpenshift/pkg/microshift"
+	"github.com/christianh814/fauxpenshift/pkg/utils"
 	log "github.com/sirupsen/logrus"
 
 	"github.com/spf13/cobra"
@@ -41,7 +42,7 @@ PRs are welcome!`,
 		}
 
 		// For now, let's just use the default K8S config path. Later this can be an option
-		user := os.Getenv("SUDO_USER")
+		log.Warn(utils.User)
 
 		// Set the homedir based on the OS
 		var homedir string
@@ -57,7 +58,7 @@ PRs are welcome!`,
 		}
 
 		// set the path to the kubeconfig file
-		kcfg := homedir + user + "/.kube/config"
+		kcfg := homedir + utils.User + "/.kube/config"
 
 		// Create the Microshift Cluster
 		log.Info("Creating Microshift instance")

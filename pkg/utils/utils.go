@@ -26,6 +26,7 @@ import (
 )
 
 var decUnstructured = yaml.NewDecodingSerializer(unstructured.UnstructuredJSONScheme)
+var User string = os.Getenv("SUDO_USER")
 
 // DoSSA  does service side apply with the given YAML as a []byte
 func DoSSA(ctx context.Context, cfg *rest.Config, yaml []byte) error {

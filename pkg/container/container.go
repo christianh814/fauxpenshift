@@ -1,9 +1,9 @@
 package container
 
 import (
-	"os"
 	"os/exec"
 
+	"github.com/christianh814/fauxpenshift/pkg/utils"
 	log "github.com/sirupsen/logrus"
 )
 
@@ -72,7 +72,7 @@ func CopyKubeConfig(runtime string, instance string, dest string) error {
 	// Let's try and fix ownership
 	if err := exec.Command(
 		"chown",
-		os.Getenv("SUDO_USER")+":"+os.Getenv("SUDO_USER"),
+		utils.User+":"+utils.User,
 		dest,
 	).Run(); err != nil {
 		return err
