@@ -52,7 +52,7 @@ fauxpenshift create
 You should have a Kubernetes Cluster with the router running
 
 ```shell
-oc get pods -n openshift-ingress 
+oc get pods -A
 ```
 
 # Testing It
