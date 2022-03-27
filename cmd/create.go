@@ -32,7 +32,7 @@ var createCmd = &cobra.Command{
 	Short: "Creates a cluster",
 	Long: `Create a local Kubernetes cluster based on MicroShift.
 
-Since the router binds to 80/443, you must run this as root.
+Since the router binds to 80, 443, and 6443; you must run this as root.
 Rootless won't work because of the aforementioned binding.
 PRs are welcome!`,
 	Run: func(cmd *cobra.Command, args []string) {

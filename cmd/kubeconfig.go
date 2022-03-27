@@ -32,7 +32,7 @@ var kubeconfigCmd = &cobra.Command{
 	Long: `This extracts the kubeconfig from the Kubernetes cluster
 so that you can write it out to a different place.
 
-Useful if you created a cluster usinig SUDO.`,
+Useful since the cluster was created using SUDO.`,
 	Run: func(cmd *cobra.Command, args []string) {
 		// Set runtime
 		// TODO: Want to probably set this centrally somehow

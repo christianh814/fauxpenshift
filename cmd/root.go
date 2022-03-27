@@ -29,9 +29,9 @@ var cfgFile string
 var rootCmd = &cobra.Command{
 	Use:     "fauxpenshift",
 	Version: "v0.0.3",
-	Short:   "Creates a Kubernetes Cluster with a Router",
-	Long: `This utility creates a Kubernetes cluster with
-an OpenShift Router installed.
+	Short:   "Creates a Kubernetes Cluster using Microshift with a Router",
+	Long: `This utility creates a Kubernetes cluster using Microshift with
+an custom OpenShift Router installed.
 
 This is useful for when you want to test a workload with 
 a router object and CRC is too heavy for you.

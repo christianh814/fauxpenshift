@@ -31,7 +31,7 @@ var destroyCmd = &cobra.Command{
 	Long: `This will destroy a cluster. There is no way
 to "save" your cluster.
 
-The functionality exists within KIND, but not when using 
+The functionality is possible, but not when using 
 this tool. PRs are welcome!`,
 	Run: func(cmd *cobra.Command, args []string) {
 		// Set runtime
