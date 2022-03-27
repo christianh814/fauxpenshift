@@ -13,6 +13,8 @@ You will also have to satisfy all the prerequisites of µShift. You will need to
 
 > **NOTE** Don't actually run Microshift, just do the prereqs
 
+If you are using Docker Desktop, please use the [same guidance as KIND](https://kind.sigs.k8s.io/docs/user/quick-start/#settings-for-docker-desktop) with respect to resources (you gotta bump them up)
+
 # Running it
 
 Download the CLI from and put it in your path.
