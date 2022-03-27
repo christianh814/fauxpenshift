@@ -4,7 +4,7 @@ import (
 	"os/exec"
 
 	"github.com/christianh814/fauxpenshift/pkg/utils"
-	log "github.com/sirupsen/logrus"
+	//log "github.com/sirupsen/logrus"
 )
 
 // RunMicroShiftContainer starts microshift it needs a runtime and a container to run
@@ -37,8 +37,11 @@ func RunMicroShiftContainer(runtime string, container string) error {
 	).Run(); err != nil {
 		// TODO: Need to figure out why running a container with go returns 125
 		//return err
-		log.Warn(err.(*exec.ExitError).Error())
-		return nil
+		if err.(*exec.ExitError).ExitCode() != 125 {
+			return err
+		}
+		//log.Warn(err.(*exec.ExitError).ExitCode())
+		//return nil
 	}
 
 	// if we're here we should be okay
@@ -56,8 +59,11 @@ func CopyKubeConfig(runtime string, instance string, dest string) error {
 	).Run(); err != nil {
 		//return err
 		// TODO: figure out why executing contianers always returns 125
-		log.Warn(err.(*exec.ExitError).Error())
-		return nil
+		if err.(*exec.ExitError).ExitCode() != 125 {
+			return err
+		}
+		//log.Warn(err.(*exec.ExitError).ExitCode())
+		//return nil
 	}
 
 	// Let's fix permissions

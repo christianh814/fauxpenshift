@@ -47,7 +47,7 @@ func StartMicroshift(kubeconfigfile string) error {
 	}
 
 	// Wait until the deployment appears and is ready
-	log.Info("Waiting for Deployment to appear")
+	log.Info("Waiting for Router Deployment to appear")
 	if err = utils.WaitForDeployment(client, ns, depl, WaitTime); err != nil {
 		return err
 	}
@@ -67,13 +67,13 @@ func StartMicroshift(kubeconfigfile string) error {
 			Value: "true",
 		},
 	}
-	log.Info("Patching Router")
+	log.Info("Updating Router Configuration")
 	if err := router.PatchRouter(ev, client, ns, depl); err != nil {
 		return err
 	}
 
 	// Wait until the deployment is ready
-	log.Info("Waiting for updated Deployment to rollout")
+	log.Info("Waiting for updated Router to rollout")
 	if err = utils.WaitForDeployment(client, ns, depl, WaitTime); err != nil {
 		return err
 	}

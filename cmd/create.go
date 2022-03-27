@@ -41,9 +41,6 @@ PRs are welcome!`,
 			log.Fatal("Currently unsupported to run rootless.")
 		}
 
-		// For now, let's just use the default K8S config path. Later this can be an option
-		log.Warn(utils.User)
-
 		// Set the homedir based on the OS
 		var homedir string
 		switch runtime.GOOS {
@@ -57,7 +54,7 @@ PRs are welcome!`,
 			homedir = "/home/"
 		}
 
-		// set the path to the kubeconfig file
+		// For now, let's just use the default K8S config path. Later this can be an option
 		kcfg := homedir + utils.User + "/.kube/config"
 
 		// Create the Microshift Cluster
