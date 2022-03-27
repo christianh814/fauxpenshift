@@ -1,15 +1,19 @@
 # FauxpenShift
 
-This cli utility creates a Kubernetes cluster using [KIND](kind.sigs.k8s.io) (KIND runs Kubernetes in a containers) and installs the [OpenShift Router](https://github.com/openshift/router) on top of it. This is useful for when you want to test your applications using OpenShift routes, but CRC is too heavy.
+This cli utility creates a Kubernetes cluster using [µShift](https://microshift.io/docs/home/) (Known as "Microshift". A version of OpenShift that runs in a container) and a custom version of the [OpenShift Router](https://github.com/openshift/router) on top of it. This is useful for when you want to test your applications using OpenShift, but [CRC](https://developers.redhat.com/products/codeready-containers/overview) is too heavy.
 
 # Prerequisites
 
 At a minimum
 
-* Docker or Podman (podman is experimental)
+* Docker or Podman (Docker is experimental, but should work)
 * Access to Nip.io
 
-While you don't need the `kind` CLI, you do need to satisfy all the prereqs for KIND. If you're having trouble see [their official docs](https://kind.sigs.k8s.io/).
+You will also have to satisfy all the prerequisites of µShift. You will need to pay attention to the [Appliation Development](https://microshift.io/docs/getting-started/#using-microshift-for-application-development) SELinux setup and the [Firewall Rules](https://microshift.io/docs/getting-started/#deploying-microshift) setup as well.
+
+> **NOTE** Don't actually run Microshift, just do the prereqs
+
+If you are using Docker Desktop, please use the [same guidance as KIND](https://kind.sigs.k8s.io/docs/user/quick-start/#settings-for-docker-desktop) with respect to resources (you gotta bump them up)
 
 # Running it
 
@@ -18,13 +22,13 @@ Download the CLI from and put it in your path.
 ## Linux
 
 ```shell
-sudo wget -O /usr/local/bin/fauxpenshift https://github.com/christianh814/fauxpenshift/releases/download/v0.0.2/fauxpenshift-amd64-linux
+sudo wget -O /usr/local/bin/fauxpenshift https://github.com/christianh814/fauxpenshift/releases/download/v0.0.3/fauxpenshift-amd64-linux
 ```
 
 ## Mac OS (Intel)
 
 ```shell
-sudo wget -O /usr/local/bin/fauxpenshift https://github.com/christianh814/fauxpenshift/releases/download/v0.0.2/fauxpenshift-amd64-darwin
+sudo wget -O /usr/local/bin/fauxpenshift https://github.com/christianh814/fauxpenshift/releases/download/v0.0.3/fauxpenshift-amd64-darwin
 ```
 
 Make it executable 
@@ -41,18 +45,18 @@ source <(fauxpenshift completion bash)
 
 Create a Kubernetes cluster with an OpenShift Router:
 
+> **NOTE** SUDO is required, sorry
+
 ```shell
-fauxpenshift create
+sudo fauxpenshift create
 ```
 
-> **NOTE** To use Podman run: `sudo  KIND_EXPERIMENTAL_PROVIDER=podman fauxpenshift create`
+> **NOTE** To use Docekr run: `sudo FAUXPENSHIFT_SET_RUNTIME=docker fauxpenshift create`
 
 You should have a Kubernetes Cluster with the router running
 
-> **NOTE** If using Podman, you must extract the kubeconfig config by runnning: `sudo fauxpenshift kubeconfig`
-
 ```shell
-oc get pods -n openshift-ingress 
+oc get pods -A
 ```
 
 # Testing It
@@ -82,14 +86,6 @@ Now create a route
 oc expose svc/welcome-php -n welcome-app
 ```
 
-Patch things that the `oc expose` didn't 100% get you.
-
-> **NOTE:** You only need to do this if you're doing this from scratch. If you have a "known good" YAML for your application it should "just work"
-```shell
-kubectl patch route welcome-php -n welcome-app --type=json -p='[{"op": "add", "path": "/spec/to/kind", "value":"Service"}]'
-kubectl patch route welcome-php -n welcome-app --type=json -p='[{"op": "add", "path": "/spec/wildcardPolicy", "value":"Subdomain"}]'
-```
-
 Get your route
 
 ```shell
@@ -107,7 +103,7 @@ curl -sI http://$(oc get route welcome-php -n welcome-app -o jsonpath='{.status.
 Delete your cluster
 
 ```shell
-fauxpenshift destroy
+sudo fauxpenshift destroy
 ```
 
-> **NOTE** If using Podman, run:  `sudo  KIND_EXPERIMENTAL_PROVIDER=podman fauxpenshift destroy`
+> **NOTE** If using Docekr, run:  `sudo FAUXPENSHIFT_SET_RUNTIME=docker fauxpenshift destroy`

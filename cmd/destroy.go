@@ -18,7 +18,8 @@ package cmd
 import (
 	"os"
 
-	"github.com/christianh814/fauxpenshift/cmd/kind"
+	"github.com/christianh814/fauxpenshift/pkg/container"
+	"github.com/christianh814/fauxpenshift/pkg/microshift"
 	log "github.com/sirupsen/logrus"
 	"github.com/spf13/cobra"
 )
@@ -30,19 +31,22 @@ var destroyCmd = &cobra.Command{
 	Long: `This will destroy a cluster. There is no way
 to "save" your cluster.
 
-The functionality exists within KIND, but not when using 
+The functionality is possible, but not when using 
 this tool. PRs are welcome!`,
 	Run: func(cmd *cobra.Command, args []string) {
-		// For now, let's just use the default K8S config path. Later this can be an option
-		homedir, _ := os.UserHomeDir()
-		kcfg := homedir + "/.kube/config"
+		// Set runtime
+		// TODO: Want to probably set this centrally somehow
+		var rt string = microshift.Runtime
+		if os.Getenv("FAUXPENSHIFT_SET_RUNTIME") == "docker" {
+			rt = "docker"
+		}
 
-		// Create the Kubernetes Cluste
-		log.Info("Destroying Kubernetes Cluster")
-		err := kind.DeleteKindCluster("fauxpenshift", kcfg)
-		if err != nil {
+		//Stop the instance
+		log.Info("Destroying Microshift instance")
+		if err := container.StopMicroshiftKubeconfig(rt, "fauxpenshift"); err != nil {
 			log.Fatal(err)
 		}
+
 	},
 }
 

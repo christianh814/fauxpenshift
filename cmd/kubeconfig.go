@@ -18,8 +18,10 @@ package cmd
 import (
 	"fmt"
 	"log"
+	"os"
 
-	"github.com/christianh814/fauxpenshift/cmd/kind"
+	"github.com/christianh814/fauxpenshift/pkg/container"
+	"github.com/christianh814/fauxpenshift/pkg/microshift"
 	"github.com/spf13/cobra"
 )
 
@@ -30,14 +32,25 @@ var kubeconfigCmd = &cobra.Command{
 	Long: `This extracts the kubeconfig from the Kubernetes cluster
 so that you can write it out to a different place.
 
-Useful if you created a cluster usinig SUDO.`,
+Useful since the cluster was created using SUDO.`,
 	Run: func(cmd *cobra.Command, args []string) {
-		kc, err := kind.GetKindKubeconfig("fauxpenshift", false)
+		// Set runtime
+		// TODO: Want to probably set this centrally somehow
+		var rt string = microshift.Runtime
+		if os.Getenv("FAUXPENSHIFT_SET_RUNTIME") == "docker" {
+			rt = "docker"
+		}
+
+		// Get the Kubeconfig
+		kc, err := container.DisplayMicroshiftKubeconfig(rt, "fauxpenshift")
+
+		// check for errors
 		if err != nil {
 			log.Fatal(err)
 		}
 
-		fmt.Println(kc)
+		// Display the kubeconfig
+		fmt.Println(string(kc))
 	},
 }
 

@@ -4,7 +4,11 @@ import (
 	"context"
 	"time"
 
-	"github.com/christianh814/fauxpenshift/cmd/utils"
+	"github.com/christianh814/fauxpenshift/pkg/utils"
+	corev1 "k8s.io/api/core/v1"
+	v1 "k8s.io/apimachinery/pkg/apis/meta/v1"
+
+	"k8s.io/client-go/kubernetes"
 	"k8s.io/client-go/tools/clientcmd"
 )
 
@@ -37,5 +41,27 @@ func InstallRouter(kcfg string) error {
 	}
 
 	// If we're here, we must be okay
+	return nil
+}
+
+func PatchRouter(envars []corev1.EnvVar, client kubernetes.Interface, ns string, deployment string) error {
+	// get the named deployment
+	rd, err := client.AppsV1().Deployments(ns).Get(context.TODO(), deployment, v1.GetOptions{})
+	if err != nil {
+		return err
+	}
+
+	// Add the env vars
+	envars = append(envars, rd.Spec.Template.Spec.Containers[0].Env...)
+	rd.Spec.Template.Spec.Containers[0].Env = envars
+
+	// Update the deployment
+	if _, err = client.AppsV1().Deployments(ns).Update(context.TODO(), rd, v1.UpdateOptions{
+		FieldManager: "fauxpenshift",
+	}); err != nil {
+		return err
+	}
+
+	//if we are here we're okay
 	return nil
 }

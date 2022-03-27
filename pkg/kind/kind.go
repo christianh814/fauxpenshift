@@ -2,9 +2,9 @@ package kind
 
 import (
 	"strings"
-	"time"
 
-	"github.com/christianh814/fauxpenshift/cmd/utils"
+	"github.com/christianh814/fauxpenshift/pkg/microshift"
+	"github.com/christianh814/fauxpenshift/pkg/utils"
 	"sigs.k8s.io/kind/pkg/cluster"
 )
 
@@ -41,7 +41,7 @@ func CreateKindCluster(name string, cfg string) error {
 		cluster.CreateWithRawConfig([]byte(KindConfig)),
 		cluster.CreateWithDisplayUsage(false),
 		cluster.CreateWithDisplaySalutation(false),
-		cluster.CreateWithWaitForReady(30*time.Second),
+		cluster.CreateWithWaitForReady(microshift.WaitTime),
 		cluster.CreateWithNodeImage(KindImageVersion),
 	)
 
