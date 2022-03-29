@@ -26,8 +26,9 @@ import (
 
 // destroyCmd represents the destroy command
 var destroyCmd = &cobra.Command{
-	Use:   "destroy",
-	Short: "Destroys a cluster",
+	Use:     "destroy",
+	Aliases: []string{"rm"},
+	Short:   "Destroys a cluster",
 	Long: `This will destroy a cluster. There is no way
 to "save" your cluster.
 
@@ -43,7 +44,12 @@ this tool. PRs are welcome!`,
 
 		//Stop the instance
 		log.Info("Destroying Microshift instance")
-		if err := container.StopMicroshiftKubeconfig(rt, "fauxpenshift"); err != nil {
+		if err := container.StopMicroshiftContainer(rt, "fauxpenshift"); err != nil {
+			log.Fatal(err)
+		}
+
+		//cleanup volume
+		if err := container.CleanupMicroshiftVolume(rt, "microshift-data"); err != nil {
 			log.Fatal(err)
 		}
 

@@ -28,7 +28,7 @@ import (
 // listCmd lists currently running clusters
 var listCmd = &cobra.Command{
 	Use:     "list",
-	Aliases: []string{"get"},
+	Aliases: []string{"get", "ls"},
 	Short:   "Lists all your instances",
 	Long:    `Shows you a simple list of your clusters`,
 	Run: func(cmd *cobra.Command, args []string) {

@@ -3,9 +3,6 @@ package container
 import (
 	"fmt"
 	"os/exec"
-	"strings"
-
-	"github.com/christianh814/fauxpenshift/pkg/utils"
 	//log "github.com/sirupsen/logrus"
 )
 
@@ -68,30 +65,6 @@ func CopyKubeConfig(runtime string, instance string, dest string) error {
 		//return nil
 	}
 
-	// Let's fix permissions
-	if err := exec.Command(
-		"chmod",
-		"0600",
-		dest,
-	).Run(); err != nil {
-		return err
-	}
-
-	// TODO: For Mac, the user doesn't get it's own group so I have to guess based on the destination
-	var owner string = utils.User + ":" + utils.User
-	if strings.Contains(dest, "Users") {
-		owner = utils.User
-	}
-
-	// Let's try and fix ownership
-	if err := exec.Command(
-		"chown",
-		owner,
-		dest,
-	).Run(); err != nil {
-		return err
-	}
-
 	// if we're here we should be okay
 	return nil
 }
@@ -143,13 +116,13 @@ func DisplayMicroshiftKubeconfig(runtime string, instance string) ([]byte, error
 }
 
 //StopMicroshiftKubeconfig shows the kubeconfig file based specified instance name
-func StopMicroshiftKubeconfig(runtime string, instance string) error {
+func StopMicroshiftContainer(runtime string, instance string) error {
 	// Stop container based on the given name
 	if err := exec.Command(
 		runtime,
 		"stop",
 		instance,
-	).Start(); err != nil {
+	).Run(); err != nil {
 		if err.(*exec.ExitError).ExitCode() != 125 {
 			return nil
 		}
@@ -157,4 +130,26 @@ func StopMicroshiftKubeconfig(runtime string, instance string) error {
 
 	// if we're here it's probably okay...right?
 	return nil
+}
+
+func CleanupMicroshiftVolume(runtime string, volume string) error {
+	// Cleanup any volumes that may have been created
+	// TODO: This is ugly but good for now. It's hardcoded to microshift-data
+	if err := exec.Command(
+		runtime,
+		"volume",
+		"rm",
+		volume,
+	).Run(); err != nil {
+		/*
+			if err.(*exec.ExitError).ExitCode() != 125 {
+				return nil
+			}
+		*/
+		return err
+	}
+
+	// if we're here it's probably okay...right?
+	return nil
+
 }

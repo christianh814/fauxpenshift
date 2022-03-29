@@ -16,11 +16,11 @@ limitations under the License.
 package cmd
 
 import (
+	"io/ioutil"
 	"os"
 	"runtime"
 
 	"github.com/christianh814/fauxpenshift/pkg/microshift"
-	"github.com/christianh814/fauxpenshift/pkg/utils"
 	log "github.com/sirupsen/logrus"
 
 	"github.com/spf13/cobra"
@@ -41,25 +41,34 @@ PRs are welcome!`,
 			log.Fatal("Currently unsupported to run rootless.")
 		}
 
-		// Set the homedir based on the OS
-		var homedir string
+		// Set the tempdir based on the OS
+		var tempdir string
 		switch runtime.GOOS {
 		case "windows":
 			log.Fatal("Windows currently not supported")
 		case "darwin":
-			homedir = "/Users/"
+			tempdir = "/tmp"
 		case "linux":
-			homedir = "/home/"
+			tempdir = "/tmp"
 		default:
-			homedir = "/home/"
+			tempdir = "/tmp"
 		}
 
+		// create a tempfile for the kubeconfig
+		tempkc, err := ioutil.TempFile(tempdir, "fauxpenshift-")
+		if err != nil {
+			log.Fatal(err)
+		}
+
+		// defer removing the file until this finishes
+		defer os.Remove(tempkc.Name())
+
 		// For now, let's just use the default K8S config path. Later this can be an option
-		kcfg := homedir + utils.User + "/.kube/config"
+		kcfg := tempkc.Name()
 
 		// Create the Microshift Cluster
 		log.Info("Creating Microshift instance")
-		err := microshift.StartMicroshift(kcfg)
+		err = microshift.StartMicroshift(kcfg)
 		if err != nil {
 			log.Fatal(err)
 		}
