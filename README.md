@@ -42,6 +42,7 @@ Bash completion if you wish
 ```shell
 source <(fauxpenshift completion bash)
 ```
+> **NOTE** This cli tool overwrites your `${HOME}/.kube/config` file. Back it up before running it if you are connected to other clusters.
 
 Create a Kubernetes cluster with an OpenShift Router:
 
@@ -107,3 +108,13 @@ sudo fauxpenshift destroy
 ```
 
 > **NOTE** If using Docekr, run:  `sudo FAUXPENSHIFT_SET_RUNTIME=docker fauxpenshift destroy`
+
+# Troubleshooting
+
+If you are finding issues starting µShift, try purging the volume
+
+> **NOTE** Same command works with `docker`
+```shell
+podman volume rm microshift-data
+```
+
