@@ -7,7 +7,7 @@ Check out the usage guide for your platfrom/runtime for specifics:
 * [Linux and Podman](docs/podmanLinux.md)
 * [Linux and Docker](docs/dockerLinux.md)
 * [Mac and Podman](docs/podmanMac.md)
-* [Mac and Docker]
+* [Mac and Docker](docs/dockerMac.md)
 
 # Prerequisites
 
@@ -21,26 +21,4 @@ You will also have to satisfy all the prerequisites of µShift. You will need to
 > **NOTE** Don't actually run Microshift, just do the prereqs
 
 If you are using Docker Desktop, please use the [same guidance as KIND](https://kind.sigs.k8s.io/docs/user/quick-start/#settings-for-docker-desktop) with respect to resources (you gotta bump them up)
-
-# Running it
-
-Download the CLI from and put it in your path.
-
-## Mac OS (Intel)
-
-```shell
-sudo wget -O /usr/local/bin/fauxpenshift https://github.com/christianh814/fauxpenshift/releases/download/v0.0.4/fauxpenshift-amd64-darwin
-```
-
-Make it executable 
-
-```shell
-sudo chmod +x /usr/local/bin/fauxpenshift
-```
-
-Bash completion if you wish
-
-```shell
-source <(fauxpenshift completion bash)
-```
 
