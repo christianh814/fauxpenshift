@@ -22,13 +22,13 @@ Download the CLI from and put it in your path.
 ## Linux
 
 ```shell
-sudo wget -O /usr/local/bin/fauxpenshift https://github.com/christianh814/fauxpenshift/releases/download/v0.0.3/fauxpenshift-amd64-linux
+sudo wget -O /usr/local/bin/fauxpenshift https://github.com/christianh814/fauxpenshift/releases/download/v0.0.4/fauxpenshift-amd64-linux
 ```
 
 ## Mac OS (Intel)
 
 ```shell
-sudo wget -O /usr/local/bin/fauxpenshift https://github.com/christianh814/fauxpenshift/releases/download/v0.0.3/fauxpenshift-amd64-darwin
+sudo wget -O /usr/local/bin/fauxpenshift https://github.com/christianh814/fauxpenshift/releases/download/v0.0.4/fauxpenshift-amd64-darwin
 ```
 
 Make it executable 
@@ -42,7 +42,6 @@ Bash completion if you wish
 ```shell
 source <(fauxpenshift completion bash)
 ```
-> **NOTE** This cli tool overwrites your `${HOME}/.kube/config` file. Back it up before running it if you are connected to other clusters.
 
 Create a Kubernetes cluster with an OpenShift Router:
 
@@ -53,6 +52,18 @@ sudo fauxpenshift create
 ```
 
 > **NOTE** To use Docekr run: `sudo FAUXPENSHIFT_SET_RUNTIME=docker fauxpenshift create`
+
+Extract your `kubeconfig` file.
+
+```shell
+sudo fauxpenshift kubeconfig > fauxpenshift.kubeconfig
+```
+
+Export the `KUBECONFIG` env var
+
+```shell
+export KUBECONFIG=fauxpenshift.kubeconfig
+```
 
 You should have a Kubernetes Cluster with the router running
 
