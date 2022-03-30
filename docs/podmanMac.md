@@ -62,7 +62,7 @@ exit
 Download the CLI from and put it in your path.
 
 ```shell
-sudo wget -O /usr/local/bin/fauxpenshift https://github.com/christianh814/fauxpenshift/releases/download/v0.0.5/fauxpenshift-amd64-darwin
+sudo wget -O /usr/local/bin/fauxpenshift https://github.com/christianh814/fauxpenshift/releases/download/v0.0.6/fauxpenshift-amd64-darwin
 ```
 
 Make it executable 

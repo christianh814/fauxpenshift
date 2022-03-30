@@ -95,7 +95,7 @@ func DisplayMicroshiftKubeconfig(runtime string, instance string) ([]byte, error
 	cmdOutPut, err := exec.Command(
 		runtime,
 		"exec",
-		"-it",
+		"-i",
 		instance,
 		"cat",
 		"/var/lib/microshift/resources/kubeadmin/kubeconfig",
