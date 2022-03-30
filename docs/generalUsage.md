@@ -82,3 +82,23 @@ Delete your cluster
 ```shell
 sudo fauxpenshift destroy
 ```
+
+# Troubleshooting
+
+If you find that µShift hasn't started or that it's having trouble starting, you should probably clean up the volume.
+
+> **NOTE** Same commands work for `docker`
+
+First force shutdown the µShift instance
+
+```shell
+sudo podman stop fauxpenshift
+```
+
+Then delete the data
+
+```shell
+sudo podman volume rm microshift-data
+```
+
+Then try and start the [Fauxpenshift instance](#general-usage).

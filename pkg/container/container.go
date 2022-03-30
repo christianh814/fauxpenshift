@@ -131,13 +131,13 @@ func StopMicroshiftContainer(runtime string, instance string) error {
 
 func CleanupMicroshiftVolume(runtime string, volume string) error {
 	// Cleanup any volumes that may have been created
-	// TODO: This is ugly but good for now. It's hardcoded to microshift-data
+	// TODO: This is ugly but good for now.
 	if err := exec.Command(
 		runtime,
 		"volume",
 		"rm",
 		volume,
-	).Run(); err != nil {
+	).Start(); err != nil {
 		/*
 			if err.(*exec.ExitError).ExitCode() != 125 {
 				return nil
