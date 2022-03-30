@@ -48,9 +48,8 @@ func RunMicroShiftContainer(runtime string, container string) error {
 	return nil
 }
 
-//CopyKubeConfig copies the kubeconfig from the given container using the runtime and copies it over to a destination
+//CopyKubeConfig cats the kubeconfig from the given container using the runtime and copies it over to a destination
 func CopyKubeConfig(runtime string, instance string, dest string) error {
-	// TESTING
 	// Get the kubeconfig file as a []byte. Check for error
 	kcf, err := DisplayMicroshiftKubeconfig(runtime, instance)
 	if err != nil {
@@ -62,24 +61,6 @@ func CopyKubeConfig(runtime string, instance string, dest string) error {
 	if err != nil {
 		return err
 	}
-
-	// Let's copy over the
-	/*
-		if err := exec.Command(
-			runtime,
-			"cp",
-			instance+":/var/lib/microshift/resources/kubeadmin/kubeconfig",
-			dest,
-		).Run(); err != nil {
-			//return err
-			// TODO: figure out why executing contianers always returns 125
-			if err.(*exec.ExitError).ExitCode() != 125 {
-				return err
-			}
-			//log.Warn(err.(*exec.ExitError).ExitCode())
-			//return nil
-		}
-	*/
 
 	// if we're here we should be okay
 	return nil
