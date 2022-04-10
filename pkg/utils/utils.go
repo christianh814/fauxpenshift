@@ -1,10 +1,16 @@
 package utils
 
 import (
+	"bytes"
 	"context"
 	"encoding/json"
+	"io"
+	"net/http"
 	"os"
+	"strings"
 	"time"
+
+	goyaml "gopkg.in/yaml.v2"
 
 	apierrors "k8s.io/apimachinery/pkg/api/errors"
 	"k8s.io/apimachinery/pkg/api/meta"
@@ -148,4 +154,43 @@ func NewClient(kubeConfigPath string) (kubernetes.Interface, error) {
 		return nil, err
 	}
 	return kubernetes.NewForConfig(kubeConfig)
+}
+
+// DownloadFileString will load the contents of a url to a string and return it
+func DownloadFileString(url string) (string, error) {
+	// Get the data
+	r, err := http.Get(url)
+	if err != nil {
+		return "", err
+	}
+	//Create a new buffer
+	buf := new(strings.Builder)
+
+	// Write the body to file
+	_, err = io.Copy(buf, r.Body)
+	return buf.String(), err
+}
+
+// SplitYAML splits a multipart YAML and returns a slice of a slice of byte
+func SplitYAML(resources []byte) ([][]byte, error) {
+
+	dec := goyaml.NewDecoder(bytes.NewReader(resources))
+
+	var res [][]byte
+	for {
+		var value interface{}
+		err := dec.Decode(&value)
+		if err == io.EOF {
+			break
+		}
+		if err != nil {
+			return nil, err
+		}
+		valueBytes, err := goyaml.Marshal(value)
+		if err != nil {
+			return nil, err
+		}
+		res = append(res, valueBytes)
+	}
+	return res, nil
 }

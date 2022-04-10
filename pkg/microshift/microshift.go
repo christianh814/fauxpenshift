@@ -5,10 +5,12 @@ import (
 	"time"
 
 	"github.com/christianh814/fauxpenshift/pkg/container"
+	"github.com/christianh814/fauxpenshift/pkg/olm"
 	"github.com/christianh814/fauxpenshift/pkg/router"
 	"github.com/christianh814/fauxpenshift/pkg/utils"
 	log "github.com/sirupsen/logrus"
 	corev1 "k8s.io/api/core/v1"
+	"k8s.io/client-go/tools/clientcmd"
 )
 
 //for now set these defaults
@@ -75,6 +77,28 @@ func StartMicroshift(kubeconfigfile string) error {
 	// Wait until the deployment is ready
 	log.Info("Waiting for updated Router to rollout")
 	if err = utils.WaitForDeployment(client, ns, depl, WaitTime); err != nil {
+		return err
+	}
+
+	// Install OLM we need the restconfig for "dossa" funciton
+	restConfig, err := clientcmd.BuildConfigFromFlags("", kubeconfigfile)
+	if err != nil {
+		return err
+	}
+	log.Info("Installing OLM from https://operatorhub.io/")
+	if err = olm.InstallOLM(restConfig); err != nil {
+		return err
+	}
+
+	// Wait until the olm-operator deployment is ready
+	log.Info("Waiting the OLM Operator to rollout")
+	if err = utils.WaitForDeployment(client, "olm", "olm-operator", WaitTime); err != nil {
+		return err
+	}
+
+	// Wait until the catalog-operator deployment is ready
+	log.Info("Waiting the Catalog Operator to rollout")
+	if err = utils.WaitForDeployment(client, "olm", "catalog-operator", WaitTime); err != nil {
 		return err
 	}
 
