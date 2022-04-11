@@ -2,6 +2,7 @@ package olm
 
 import (
 	"context"
+	"time"
 
 	"github.com/christianh814/fauxpenshift/pkg/utils"
 	"k8s.io/client-go/rest"
@@ -34,6 +35,8 @@ func InstallOLM(k *rest.Config) error {
 			if err := utils.DoSSA(context.TODO(), k, y); err != nil {
 				return err
 			}
+			// TODO: figure out what I'm loading and wait until it's available.
+			time.Sleep(3 * time.Second)
 		}
 
 	}
