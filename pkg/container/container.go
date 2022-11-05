@@ -48,7 +48,7 @@ func RunMicroShiftContainer(runtime string, container string) error {
 	return nil
 }
 
-//CopyKubeConfig cats the kubeconfig from the given container using the runtime and copies it over to a destination
+// CopyKubeConfig cats the kubeconfig from the given container using the runtime and copies it over to a destination
 func CopyKubeConfig(runtime string, instance string, dest string) error {
 	// Get the kubeconfig file as a []byte. Check for error
 	kcf, err := DisplayMicroshiftKubeconfig(runtime, instance)
@@ -66,7 +66,7 @@ func CopyKubeConfig(runtime string, instance string, dest string) error {
 	return nil
 }
 
-//DisplayMicroshiftInstance lists containers based on the specified label
+// DisplayMicroshiftInstance lists containers based on the specified label
 func DisplayMicroshiftInstance(runtime string, label string) ([]byte, error) {
 	// Get the container based on the label given
 	cmdOutPut, err := exec.Command(
@@ -89,7 +89,7 @@ func DisplayMicroshiftInstance(runtime string, label string) ([]byte, error) {
 	return cmdOutPut, nil
 }
 
-//DisplayMicroshiftKubeconfig shows the kubeconfig file based specified instance name
+// DisplayMicroshiftKubeconfig shows the kubeconfig file based specified instance name
 func DisplayMicroshiftKubeconfig(runtime string, instance string) ([]byte, error) {
 	// Get the container based on the name given
 	cmdOutPut, err := exec.Command(
@@ -112,17 +112,34 @@ func DisplayMicroshiftKubeconfig(runtime string, instance string) ([]byte, error
 	return cmdOutPut, nil
 }
 
-//StopMicroshiftKubeconfig shows the kubeconfig file based specified instance name
+// StopMicroshiftKubeconfig shows the kubeconfig file based specified instance name
 func StopMicroshiftContainer(runtime string, instance string) error {
-	// Stop container based on the given name
-	if err := exec.Command(
+	// Stop instance
+	exec.Command(
 		runtime,
 		"stop",
 		instance,
-	).Run(); err != nil {
+	).Run()
+
+	// List the container to see if it's still running
+	output, err := exec.Command(
+		runtime,
+		"ps",
+		" --noheading",
+		"--filter",
+		"label=fauxpenshift=instance",
+	).Output()
+
+	// Check for errors
+	if err != nil {
 		if err.(*exec.ExitError).ExitCode() != 125 {
-			return nil
+			return err
 		}
+	}
+
+	// Check the output to see if the container is still running
+	if len(output) != 0 {
+		return fmt.Errorf("instance %s is still running", instance)
 	}
 
 	// if we're here it's probably okay...right?
