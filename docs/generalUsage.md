@@ -72,7 +72,7 @@ oc get route -n welcome-app
 Curl it (or open it up in a browser)
 
 ```shell
-curl -sI http://$(oc get route welcome-php -n welcome-app -o jsonpath='{.status.ingress[-2].host}')
+curl -sI http://$(oc get route welcome-php -n welcome-app -o jsonpath='{.status.ingress[0].host}')
 ```
 
 # Clean Up
