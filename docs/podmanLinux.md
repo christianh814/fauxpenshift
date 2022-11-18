@@ -42,7 +42,7 @@ sudo setsebool -P container_manage_cgroup true
 Download the CLI from and put it in your path.
 
 ```shell
-sudo wget -O /usr/local/bin/fauxpenshift https://github.com/christianh814/fauxpenshift/releases/download/v0.0.8/fauxpenshift-linux-amd64
+sudo wget -O /usr/local/bin/fauxpenshift https://github.com/christianh814/fauxpenshift/releases/download/v0.0.10/fauxpenshift-linux-amd64
 ```
 
 Make it executable 

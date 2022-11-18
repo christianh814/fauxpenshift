@@ -13,7 +13,6 @@ import (
 )
 
 // for now set these defaults
-var Runtime string
 var MicroShiftImage string = "quay.io/microshift/microshift-aio:latest"
 var WaitTime time.Duration = 600 * time.Second
 
@@ -21,11 +20,10 @@ func StartMicroshift(kubeconfigfile string, runtime string) error {
 	// Set the variables for the OpenShift Router
 	ns := "openshift-ingress"
 	depl := "router-default"
-	Runtime = runtime
 
 	// try and run the microshift container, return if there's an error
 	log.Info("Running Microshift")
-	if err := container.RunMicroShiftContainer(Runtime, MicroShiftImage); err != nil {
+	if err := container.RunMicroShiftContainer(runtime, MicroShiftImage); err != nil {
 		return err
 	}
 
@@ -33,7 +31,7 @@ func StartMicroshift(kubeconfigfile string, runtime string) error {
 	// TODO: It takes a while for µShift to come up. Need a better method of waiting
 	log.Info("Setting up Kubeconfig File")
 	time.Sleep(10 * time.Second)
-	if err := container.CopyKubeConfig(Runtime, "fauxpenshift", kubeconfigfile); err != nil {
+	if err := container.CopyKubeConfig(runtime, "fauxpenshift", kubeconfigfile); err != nil {
 		return err
 	}
 

@@ -19,7 +19,6 @@ import (
 	"github.com/christianh814/fauxpenshift/pkg/container"
 	log "github.com/sirupsen/logrus"
 	"github.com/spf13/cobra"
-	"github.com/spf13/viper"
 )
 
 // destroyCmd represents the destroy command
@@ -33,18 +32,14 @@ to "save" your cluster.
 The functionality is possible, but not when using 
 this tool. PRs are welcome!`,
 	Run: func(cmd *cobra.Command, args []string) {
-		// Set runtime
-		rt := viper.GetString("runtime")
-		log.Info("Setting runtime to ", rt)
-
 		//Stop the instance
 		log.Info("Destroying Microshift instance")
-		if err := container.StopMicroshiftContainer(rt, "fauxpenshift"); err != nil {
+		if err := container.StopMicroshiftContainer(Runtime, "fauxpenshift"); err != nil {
 			log.Fatal(err)
 		}
 
 		//cleanup volume
-		if err := container.CleanupMicroshiftVolume(rt, "microshift-data"); err != nil {
+		if err := container.CleanupMicroshiftVolume(Runtime, "microshift-data"); err != nil {
 			log.Fatal(err)
 		}
 
@@ -53,14 +48,4 @@ this tool. PRs are welcome!`,
 
 func init() {
 	rootCmd.AddCommand(destroyCmd)
-
-	// Here you will define your flags and configuration settings.
-
-	// Cobra supports Persistent Flags which will work for this command
-	// and all subcommands, e.g.:
-	// destoryCmd.PersistentFlags().String("foo", "", "A help for foo")
-
-	// Cobra supports local flags which will only run when this command
-	// is called directly, e.g.:
-	// destoryCmd.Flags().BoolP("toggle", "t", false, "Help message for toggle")
 }

@@ -19,11 +19,13 @@ import (
 	"fmt"
 	"os"
 
+	log "github.com/sirupsen/logrus"
 	"github.com/spf13/cobra"
 	"github.com/spf13/viper"
 )
 
 var cfgFile string
+var Runtime string
 
 // rootCmd represents the base command when called without any subcommands
 var rootCmd = &cobra.Command{
@@ -38,7 +40,7 @@ a router object and CRC is too heavy for you.
 Not at ALL intended to be used in production.`,
 	// Uncomment the following line if your bare application
 	// has an action associated with it:
-	// Run: func(cmd *cobra.Command, args []string) { },
+	//Run: func(cmd *cobra.Command, args []string) { },
 }
 
 // Execute adds all child commands to the root command and sets flags appropriately.
@@ -58,12 +60,14 @@ func init() {
 	// will be global for your application.
 
 	rootCmd.PersistentFlags().StringVar(&cfgFile, "config", "", "config file (default is $HOME/.fauxpenshift.yaml)")
+	// Get the "runtime" via CLI flag, env var suffix, or config file
 	rootCmd.PersistentFlags().StringP("runtime", "r", "podman", "The runtime to use. Can be podman or docker")
 	viper.BindPFlag("runtime", rootCmd.PersistentFlags().Lookup("runtime"))
 
 	// Cobra also supports local flags, which will only run
 	// when this action is called directly.
 	//rootCmd.Flags().BoolP("toggle", "t", false, "Help message for toggle")
+
 }
 
 // initConfig reads in config file and ENV variables if set.
@@ -82,7 +86,7 @@ func initConfig() {
 		viper.SetConfigName(".fauxpenshift")
 	}
 
-	// Look for env variables named FAUXPENSHIFT_*
+	// Look for env variables with the prefix FAUXPENSHIFT_*
 	viper.SetEnvPrefix("FAUXPENSHIFT")
 
 	viper.AutomaticEnv() // read in environment variables that match
@@ -91,4 +95,8 @@ func initConfig() {
 	if err := viper.ReadInConfig(); err == nil {
 		fmt.Fprintln(os.Stderr, "Using config file:", viper.ConfigFileUsed())
 	}
+
+	// set the runtime globally
+	Runtime = viper.GetString("runtime")
+	log.Info("Setting runtime to ", Runtime)
 }

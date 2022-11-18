@@ -17,6 +17,7 @@ Example:
 	source <(` + rootCmd.Name() + ` completion bash)
 `,
 	Run: func(cmd *cobra.Command, args []string) {
+		// Generate shell completion
 		if len(args) == 0 {
 			cmd.Help()
 			os.Exit(0)

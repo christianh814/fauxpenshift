@@ -21,7 +21,6 @@ import (
 	"github.com/christianh814/fauxpenshift/pkg/container"
 	log "github.com/sirupsen/logrus"
 	"github.com/spf13/cobra"
-	"github.com/spf13/viper"
 )
 
 // listCmd lists currently running clusters
@@ -31,12 +30,8 @@ var listCmd = &cobra.Command{
 	Short:   "Lists all your instances",
 	Long:    `Shows you a simple list of your clusters`,
 	Run: func(cmd *cobra.Command, args []string) {
-		// Set the runtime
-		rt := viper.GetString("runtime")
-		log.Info("Setting runtime to ", rt)
-
 		// Display current clusters
-		output, err := container.DisplayMicroshiftInstance(rt, "label=fauxpenshift=instance")
+		output, err := container.DisplayMicroshiftInstance(Runtime, "label=fauxpenshift=instance")
 
 		// check for errors
 		if err != nil {

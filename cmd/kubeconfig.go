@@ -22,7 +22,6 @@ import (
 
 	"github.com/christianh814/fauxpenshift/pkg/container"
 	"github.com/spf13/cobra"
-	"github.com/spf13/viper"
 )
 
 // kubeconfigCmd represents the kubeconfig command
@@ -34,12 +33,8 @@ so that you can write it out to a different place.
 
 Useful since the cluster was created using SUDO.`,
 	Run: func(cmd *cobra.Command, args []string) {
-		// Set runtime
-		rt := viper.GetString("runtime")
-		log.Info("Setting runtime to ", rt)
-
 		// Get the Kubeconfig
-		kc, err := container.DisplayMicroshiftKubeconfig(rt, "fauxpenshift")
+		kc, err := container.DisplayMicroshiftKubeconfig(Runtime, "fauxpenshift")
 
 		// check for errors
 		if err != nil {

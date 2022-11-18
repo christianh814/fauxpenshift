@@ -19,7 +19,6 @@ import (
 	"github.com/christianh814/fauxpenshift/pkg/container"
 	log "github.com/sirupsen/logrus"
 	"github.com/spf13/cobra"
-	"github.com/spf13/viper"
 )
 
 // cleanupCmd represents the cleanup command
@@ -34,30 +33,16 @@ Example:
 
 This is "scorch the earth", so use with caution.`,
 	Run: func(cmd *cobra.Command, args []string) {
-		// set runtime
-		rt := viper.GetString("runtime")
-		log.Info("Setting runtime to ", rt)
-
 		log.Info("Cleaning up any instances")
 
 		// Stop the instance
-		container.StopMicroshiftContainer(rt, "fauxpenshift")
+		container.StopMicroshiftContainer(Runtime, "fauxpenshift")
 
 		//cleanup volume
-		container.CleanupMicroshiftVolume(rt, "microshift-data")
+		container.CleanupMicroshiftVolume(Runtime, "microshift-data")
 	},
 }
 
 func init() {
 	rootCmd.AddCommand(cleanupCmd)
-
-	// Here you will define your flags and configuration settings.
-
-	// Cobra supports Persistent Flags which will work for this command
-	// and all subcommands, e.g.:
-	// cleanupCmd.PersistentFlags().String("foo", "", "A help for foo")
-
-	// Cobra supports local flags which will only run when this command
-	// is called directly, e.g.:
-	// cleanupCmd.Flags().BoolP("toggle", "t", false, "Help message for toggle")
 }
