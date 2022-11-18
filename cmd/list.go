@@ -17,12 +17,11 @@ package cmd
 
 import (
 	"fmt"
-	"os"
 
 	"github.com/christianh814/fauxpenshift/pkg/container"
-	"github.com/christianh814/fauxpenshift/pkg/microshift"
 	log "github.com/sirupsen/logrus"
 	"github.com/spf13/cobra"
+	"github.com/spf13/viper"
 )
 
 // listCmd lists currently running clusters
@@ -32,12 +31,9 @@ var listCmd = &cobra.Command{
 	Short:   "Lists all your instances",
 	Long:    `Shows you a simple list of your clusters`,
 	Run: func(cmd *cobra.Command, args []string) {
-		// Set runtime
-		// TODO: Want to probably set this centrally somehow
-		var rt string = microshift.Runtime
-		if os.Getenv("FAUXPENSHIFT_SET_RUNTIME") == "docker" {
-			rt = "docker"
-		}
+		// Set the runtime
+		rt := viper.GetString("runtime")
+		log.Info("Setting runtime to ", rt)
 
 		// Display current clusters
 		output, err := container.DisplayMicroshiftInstance(rt, "label=fauxpenshift=instance")

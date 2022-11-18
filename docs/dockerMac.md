@@ -43,10 +43,12 @@ source <(fauxpenshift completion bash)
 
 # Ready to use
 
-When reading the usage guide, make sure you export `FAUXPENSHIFT_SET_RUNTIME=docker` before every command (or export that env var globally). Example:
+When reading the usage guide, make sure you export `FAUXPENSHIFT_RUNTIME=docker` before every command (or export that env var globally). Example:
 
 ```shell
-sudo FAUXPENSHIFT_SET_RUNTIME=docker fauxpenshift create
+sudo FAUXPENSHIFT_RUNTIME=docker fauxpenshift create
 ```
+
+> NOTE: You can also use the `--runtime` option
 
 You can now follow the [general usage guide](generalUsage.md)

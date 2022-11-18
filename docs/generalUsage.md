@@ -1,12 +1,14 @@
 # General Usage
 
-This is a general usage guide. If you are using the `docker` runtime, prefix every command with `FAUXPENSHIFT_SET_RUNTIME` 
+This is a general usage guide. If you are using the `docker` runtime, prefix every command with `FAUXPENSHIFT_RUNTIME` 
 
 Example:
 
 ```shell
-sudo FAUXPENSHIFT_SET_RUNTIME=docker fauxpenshift create
+sudo FAUXPENSHIFT_RUNTIME=docker fauxpenshift create
 ```
+
+> NOTE: You can also use the `--runtime` option
 
 You can also set this env variable globally if you wish.
 

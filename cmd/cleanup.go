@@ -16,12 +16,10 @@ limitations under the License.
 package cmd
 
 import (
-	"os"
-
 	"github.com/christianh814/fauxpenshift/pkg/container"
-	"github.com/christianh814/fauxpenshift/pkg/microshift"
 	log "github.com/sirupsen/logrus"
 	"github.com/spf13/cobra"
+	"github.com/spf13/viper"
 )
 
 // cleanupCmd represents the cleanup command
@@ -37,10 +35,8 @@ Example:
 This is "scorch the earth", so use with caution.`,
 	Run: func(cmd *cobra.Command, args []string) {
 		// set runtime
-		var rt string = microshift.Runtime
-		if os.Getenv("FAUXPENSHIFT_SET_RUNTIME") == "docker" {
-			rt = "docker"
-		}
+		rt := viper.GetString("runtime")
+		log.Info("Setting runtime to ", rt)
 
 		log.Info("Cleaning up any instances")
 

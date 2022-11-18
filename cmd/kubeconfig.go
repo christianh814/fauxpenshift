@@ -5,7 +5,7 @@ Licensed under the Apache License, Version 2.0 (the "License");
 you may not use this file except in compliance with the License.
 You may obtain a copy of the License at
 
-    http://www.apache.org/licenses/LICENSE-2.0
+	http://www.apache.org/licenses/LICENSE-2.0
 
 Unless required by applicable law or agreed to in writing, software
 distributed under the License is distributed on an "AS IS" BASIS,
@@ -17,12 +17,12 @@ package cmd
 
 import (
 	"fmt"
-	"log"
-	"os"
+
+	log "github.com/sirupsen/logrus"
 
 	"github.com/christianh814/fauxpenshift/pkg/container"
-	"github.com/christianh814/fauxpenshift/pkg/microshift"
 	"github.com/spf13/cobra"
+	"github.com/spf13/viper"
 )
 
 // kubeconfigCmd represents the kubeconfig command
@@ -35,11 +35,8 @@ so that you can write it out to a different place.
 Useful since the cluster was created using SUDO.`,
 	Run: func(cmd *cobra.Command, args []string) {
 		// Set runtime
-		// TODO: Want to probably set this centrally somehow
-		var rt string = microshift.Runtime
-		if os.Getenv("FAUXPENSHIFT_SET_RUNTIME") == "docker" {
-			rt = "docker"
-		}
+		rt := viper.GetString("runtime")
+		log.Info("Setting runtime to ", rt)
 
 		// Get the Kubeconfig
 		kc, err := container.DisplayMicroshiftKubeconfig(rt, "fauxpenshift")

@@ -23,6 +23,7 @@ import (
 	log "github.com/sirupsen/logrus"
 
 	"github.com/spf13/cobra"
+	"github.com/spf13/viper"
 )
 
 // createCmd represents the create command
@@ -39,6 +40,10 @@ PRs are welcome!`,
 		if os.Getuid() != 0 {
 			log.Fatal("Currently unsupported to run rootless.")
 		}
+
+		// Set the runtime
+		rt := viper.GetString("runtime")
+		log.Info("Setting runtime to ", rt)
 
 		// Set the tempdir based on the OS
 		var tempdir string
@@ -69,7 +74,7 @@ PRs are welcome!`,
 
 		// Create the Microshift Cluster
 		log.Info("Creating Microshift instance")
-		err = microshift.StartMicroshift(kcfg)
+		err = microshift.StartMicroshift(kcfg, rt)
 		if err != nil {
 			log.Fatal(err)
 		}

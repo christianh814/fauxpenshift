@@ -1,7 +1,6 @@
 package microshift
 
 import (
-	"os"
 	"time"
 
 	"github.com/christianh814/fauxpenshift/pkg/container"
@@ -13,20 +12,16 @@ import (
 	"k8s.io/client-go/tools/clientcmd"
 )
 
-//for now set these defaults
-var Runtime string = "podman"
+// for now set these defaults
+var Runtime string
 var MicroShiftImage string = "quay.io/microshift/microshift-aio:latest"
 var WaitTime time.Duration = 600 * time.Second
 
-func StartMicroshift(kubeconfigfile string) error {
+func StartMicroshift(kubeconfigfile string, runtime string) error {
 	// Set the variables for the OpenShift Router
 	ns := "openshift-ingress"
 	depl := "router-default"
-	// First check to see if someone provided a different runtime
-	if os.Getenv("FAUXPENSHIFT_SET_RUNTIME") == "docker" {
-		log.Info("Using Docker runtime")
-		Runtime = "docker"
-	}
+	Runtime = runtime
 
 	// try and run the microshift container, return if there's an error
 	log.Info("Running Microshift")

@@ -28,7 +28,7 @@ var cfgFile string
 // rootCmd represents the base command when called without any subcommands
 var rootCmd = &cobra.Command{
 	Use:     "fauxpenshift",
-	Version: "v0.0.9",
+	Version: "v0.0.10",
 	Short:   "Creates a Kubernetes Cluster using Microshift with a Router",
 	Long: `This utility creates a Kubernetes cluster using Microshift with
 an custom OpenShift Router installed.
@@ -58,10 +58,12 @@ func init() {
 	// will be global for your application.
 
 	rootCmd.PersistentFlags().StringVar(&cfgFile, "config", "", "config file (default is $HOME/.fauxpenshift.yaml)")
+	rootCmd.PersistentFlags().StringP("runtime", "r", "podman", "The runtime to use. Can be podman or docker")
+	viper.BindPFlag("runtime", rootCmd.PersistentFlags().Lookup("runtime"))
 
 	// Cobra also supports local flags, which will only run
 	// when this action is called directly.
-	rootCmd.Flags().BoolP("toggle", "t", false, "Help message for toggle")
+	//rootCmd.Flags().BoolP("toggle", "t", false, "Help message for toggle")
 }
 
 // initConfig reads in config file and ENV variables if set.
@@ -79,6 +81,9 @@ func initConfig() {
 		viper.SetConfigType("yaml")
 		viper.SetConfigName(".fauxpenshift")
 	}
+
+	// Look for env variables named FAUXPENSHIFT_*
+	viper.SetEnvPrefix("FAUXPENSHIFT")
 
 	viper.AutomaticEnv() // read in environment variables that match
 
