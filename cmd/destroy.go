@@ -32,6 +32,8 @@ to "save" your cluster.
 The functionality is possible, but not when using 
 this tool. PRs are welcome!`,
 	Run: func(cmd *cobra.Command, args []string) {
+		log.Info("Setting runtime to ", Runtime)
+
 		//Stop the instance
 		log.Info("Destroying Microshift instance")
 		if err := container.StopMicroshiftContainer(Runtime, "fauxpenshift"); err != nil {

@@ -39,6 +39,7 @@ PRs are welcome!`,
 		if os.Getuid() != 0 {
 			log.Fatal("Currently unsupported to run rootless.")
 		}
+		log.Info("Setting runtime to ", Runtime)
 
 		// Set the tempdir based on the OS
 		var tempdir string

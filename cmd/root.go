@@ -19,7 +19,6 @@ import (
 	"fmt"
 	"os"
 
-	log "github.com/sirupsen/logrus"
 	"github.com/spf13/cobra"
 	"github.com/spf13/viper"
 )
@@ -98,5 +97,4 @@ func initConfig() {
 
 	// set the runtime globally
 	Runtime = viper.GetString("runtime")
-	log.Info("Setting runtime to ", Runtime)
 }

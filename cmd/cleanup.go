@@ -33,6 +33,7 @@ Example:
 
 This is "scorch the earth", so use with caution.`,
 	Run: func(cmd *cobra.Command, args []string) {
+		log.Info("Setting runtime to ", Runtime)
 		log.Info("Cleaning up any instances")
 
 		// Stop the instance

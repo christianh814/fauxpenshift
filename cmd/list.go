@@ -30,6 +30,8 @@ var listCmd = &cobra.Command{
 	Short:   "Lists all your instances",
 	Long:    `Shows you a simple list of your clusters`,
 	Run: func(cmd *cobra.Command, args []string) {
+		log.Info("Setting runtime to ", Runtime)
+
 		// Display current clusters
 		output, err := container.DisplayMicroshiftInstance(Runtime, "label=fauxpenshift=instance")
 
