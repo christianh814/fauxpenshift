@@ -4,9 +4,11 @@ import (
 	"bytes"
 	"context"
 	"encoding/json"
+	"errors"
 	"io"
 	"net/http"
 	"os"
+	"os/exec"
 	"strings"
 	"time"
 
@@ -33,6 +35,25 @@ import (
 
 var decUnstructured = yaml.NewDecodingSerializer(unstructured.UnstructuredJSONScheme)
 var User string = os.Getenv("SUDO_USER")
+
+// ValidateRuntime takes the runtime as a string and performs basic checks of the runtime.
+func ValidateRuntime(r string) error {
+	// Make sure that the runtime is in the path
+	if _, err := exec.LookPath(r); err != nil {
+		return err
+	}
+
+	// Make sure the user provided a valid runtime
+	switch r {
+	case "docker":
+		return nil
+	case "podman":
+		return nil
+	default:
+		return errors.New("invalid runtime")
+	}
+
+}
 
 // DoSSA  does service side apply with the given YAML as a []byte
 func DoSSA(ctx context.Context, cfg *rest.Config, yaml []byte) error {
@@ -108,7 +129,7 @@ func GetDefaultRuntime() cluster.ProviderOption {
 	}
 }
 
-//check to see if the named deployment is running
+// check to see if the named deployment is running
 func IsDeploymentRunning(c kubernetes.Interface, ns string, depl string) wait.ConditionFunc {
 
 	return func() (bool, error) {

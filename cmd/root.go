@@ -19,6 +19,9 @@ import (
 	"fmt"
 	"os"
 
+	log "github.com/sirupsen/logrus"
+
+	"github.com/christianh814/fauxpenshift/pkg/utils"
 	"github.com/spf13/cobra"
 	"github.com/spf13/viper"
 )
@@ -29,7 +32,7 @@ var Runtime string
 // rootCmd represents the base command when called without any subcommands
 var rootCmd = &cobra.Command{
 	Use:     "fauxpenshift",
-	Version: "v0.0.10",
+	Version: "v0.0.11",
 	Short:   "Creates a Kubernetes Cluster using Microshift with a Router",
 	Long: `This utility creates a Kubernetes cluster using Microshift with
 an custom OpenShift Router installed.
@@ -97,4 +100,7 @@ func initConfig() {
 
 	// set the runtime globally
 	Runtime = viper.GetString("runtime")
+	if err := utils.ValidateRuntime(Runtime); err != nil {
+		log.Fatal(err)
+	}
 }

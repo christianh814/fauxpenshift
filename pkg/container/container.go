@@ -9,11 +9,6 @@ import (
 
 // RunMicroShiftContainer starts microshift it needs a runtime and a container to run
 func RunMicroShiftContainer(runtime string, container string) error {
-	// Make sure that the runtime is in the path
-	if _, err := exec.LookPath(runtime); err != nil {
-		return err
-	}
-
 	// Try and run the microshift container. For now, this is crude. Comeback and fix later
 	if err := exec.Command(
 		runtime,
